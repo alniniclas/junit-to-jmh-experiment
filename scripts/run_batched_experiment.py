@@ -23,6 +23,7 @@ class GradleTestRunner:
     self.project_root = os.path.abspath(project_root)
     self.gradlew = os.path.join(self.project_root, 'gradlew.bat' if os.name == 'nt' else 'gradlew')
     self.test_results_root = os.path.join(self.project_root, 'build', 'test-results', 'test')
+    self.build_test_tmp_dir = os.path.join(self.project_root, 'build', 'tmp', 'test')
     self.executions = executions
 
   def run_batch(self, tests, output_dir, logging_context=''):
@@ -47,6 +48,9 @@ class GradleTestRunner:
         except BenchmarkExecutionFailedError:
           test_durations[test['class'], test['test']].append('FAILED')
       clear_console_line()
+    if os.path.exists(self.build_test_tmp_dir):
+      # Delete build/tmp/test to prevent it from growing indefinitely.
+      shutil.rmtree(self.build_test_tmp_dir)
     output = [
       {'class': class_name, 'test': test_name, 'test_durations': test_durations[class_name, test_name]}
       for class_name, test_name in test_durations
