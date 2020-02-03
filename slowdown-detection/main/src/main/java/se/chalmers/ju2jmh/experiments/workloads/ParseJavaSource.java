@@ -1,9 +1,9 @@
-package se.chalmers.ju2jmh.experiments;
+package se.chalmers.ju2jmh.experiments.workloads;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 
-public class WorkloadParseJavaSource {
+public class ParseJavaSource {
     public static final String INPUT = String.join("\n",
             "package com.example;",
             "",

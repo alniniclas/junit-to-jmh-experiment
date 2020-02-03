@@ -1,6 +1,6 @@
-package se.chalmers.ju2jmh.experiments;
+package se.chalmers.ju2jmh.experiments.workloads;
 
-public class WorkloadToHexString {
+public class ToHexString {
     public static final double INPUT = -12.345E-67;
     public static final String OUTPUT = runWorkload(INPUT);
 
