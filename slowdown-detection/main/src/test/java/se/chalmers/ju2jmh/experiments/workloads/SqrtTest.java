@@ -5,8 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class SqrtTest {
-    private final double input = Sqrt.INPUT;
-    private final double expected = Sqrt.OUTPUT;
+    private double input = Sqrt.INPUT;
+    private double expected = Sqrt.OUTPUT;
 
     @Test
     public void testRunWorkloadOnce() {

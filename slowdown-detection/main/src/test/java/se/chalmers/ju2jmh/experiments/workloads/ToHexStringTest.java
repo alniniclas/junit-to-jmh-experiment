@@ -5,8 +5,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class ToHexStringTest {
-    private final double input = ToHexString.INPUT;
-    private final String expected = ToHexString.OUTPUT;
+    private double input = ToHexString.INPUT;
+    private String expected = ToHexString.OUTPUT;
 
     @Test
     public void testRunWorkloadOnce() {
