@@ -6,6 +6,7 @@ plugins {
 dependencies {
     val jUnit4Version: String by rootProject.extra
 
+    jmh(project(":main"))
     jmh(project(":main", "testArchive"))
     jmh("junit", "junit", jUnit4Version)
 }
