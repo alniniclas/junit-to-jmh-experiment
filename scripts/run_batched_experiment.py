@@ -18,23 +18,26 @@ def clear_console_line():
 
 
 class GradleTestRunner:
-  def __init__(self, name, project_root, executions):
+  def __init__(self, name, project_root, subproject_path, executions):
     self.name = name
     self.project_root = os.path.abspath(project_root)
     self.gradlew = os.path.join(self.project_root, 'gradlew.bat' if os.name == 'nt' else 'gradlew')
-    self.test_results_root = os.path.join(self.project_root, 'build', 'test-results', 'test')
-    self.build_test_tmp_dir = os.path.join(self.project_root, 'build', 'tmp', 'test')
+    self.subproject_path = subproject_path
+    subproject_root = os.path.join(self.project_root, *subproject_path)
+    self.test_results_root = os.path.join(subproject_root, 'build', 'test-results', 'test')
+    self.build_test_tmp_dir = os.path.join(subproject_root, 'build', 'tmp', 'test')
     self.executions = executions
 
   def run_batch(self, tests, output_dir, logging_context=''):
     test_durations = {(test['class'], test['test']): [] for test in tests}
     test_names = ['{}.{}'.format(test['class'], test['test']) for test in tests]
-    unit_test_command = [self.gradlew, 'test']
+    gradle_command = ':'.join(('', *self.subproject_path, 'test'))
+    unit_test_command = [self.gradlew, gradle_command]
     for test in tests:
       qualified_test_name = '{}.{}'.format(test['class'], test['test'])
       unit_test_command.extend(['--tests', qualified_test_name])
     for i in range(self.executions):
-      print('{} [{} {:d}/{:d}] gradlew test'.format(logging_context, self.name, i + 1, self.executions))
+      print('{} [{} {:d}/{:d}] gradlew {}'.format(logging_context, self.name, i + 1, self.executions, gradle_command))
       subprocess.run(
         unit_test_command, cwd=self.project_root,
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
@@ -204,7 +207,8 @@ def main():
     approach = runner_config['approach']
     name = runner_config['name']
     if approach == 'gradle-test':
-      benchmark_runner = GradleTestRunner(name, runner_config['project_root'], runner_config['executions'])
+      subproject_path = runner_config['subproject_path'] if 'subproject_path' in runner_config else []
+      benchmark_runner = GradleTestRunner(name, runner_config['project_root'], subproject_path, runner_config['executions'])
     elif approach == 'ju2jmh':
       benchmark_runner = Ju2JmhBenchmarkRunner(name, runner_config['jar'], runner_config['forks'], runner_config['time'])
     elif approach == 'ju4runner':
