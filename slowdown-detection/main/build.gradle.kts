@@ -13,6 +13,12 @@ dependencies {
     testImplementation("junit", "junit", jUnit4Version)
 }
 
+tasks {
+    test {
+        outputs.upToDateWhen { false }
+    }
+}
+
 configurations.register("testArchive") {
     extendsFrom(configurations.testCompile.get())
 }
