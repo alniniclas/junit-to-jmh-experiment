@@ -1,2 +1,4 @@
 /slowdown-detection/.gradle
 /slowdown-detection/**/build/
+
+__pycache__/
