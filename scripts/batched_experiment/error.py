@@ -1,0 +1,2 @@
+class BenchmarkExecutionFailedError(Exception):
+  pass
