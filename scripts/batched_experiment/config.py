@@ -49,16 +49,6 @@ class JmhRunnerConfiguration(RunnerConfiguration):
     return os.path.join(self.name, test.class_name, test.method_name, 'output.json')
 
 
-class Ju2JmhRunnerConfiguration(JmhRunnerConfiguration):
-  def __init__(self, name, jar, forks, time):
-    super().__init__(name, 'ju2jmh', jar, forks, time)
-
-
-class Ju4RunnerRunnerConfiguration(JmhRunnerConfiguration):
-  def __init__(self, name, jar, forks, time):
-    super().__init__(name, 'ju4runner', jar, forks, time)
-
-
 class BatchedExperimentConfiguration:
   @staticmethod
   def _split_into_batches(tests, batch_size):
@@ -97,14 +87,11 @@ class BatchedExperimentConfiguration:
         subproject_path = runner_config['subproject_path'] if 'subproject_path' in runner_config else []
         executions = runner_config['executions']
         return GradleTestRunnerConfiguration(name, project_root, subproject_path, executions)
-      elif approach in ('ju2jmh', 'ju4runner'):
+      elif approach in ('jmh', 'ju2jmh', 'ju4runner'):
         jar = runner_config['jar']
         forks = runner_config['forks']
         time = runner_config['time']
-        if approach == 'ju2jmh':
-          return Ju2JmhRunnerConfiguration(name, jar, forks, time)
-        elif approach == 'ju4runner':
-          return Ju4RunnerRunnerConfiguration(name, jar, forks, time)
+        return JmhRunnerConfiguration(name, approach, jar, forks, time)
       raise ValueError('Unrecognised approach: {}'.format(approach))
 
     runner_configs = [parse_runner_config(rcd) for rcd in config_dict['configs']]

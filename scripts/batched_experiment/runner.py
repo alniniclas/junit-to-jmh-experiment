@@ -73,7 +73,8 @@ class JmhBenchmarkRunner:
     self.forks = config.forks
 
   def benchmark_regex(self, test):
-    raise NotImplementedError()
+    regex = re.escape('{}.{}'.format(test.class_name, test.method_name))
+    return '^{}$'.format(regex)
 
   def run_batch(self, tests, output_dir, logging_context=''):
     for i in range(len(tests)):
@@ -123,6 +124,7 @@ class ExperimentRunner:
   def _create_runner(config):
     approaches = {
       'gradle-test': GradleTestRunner,
+      'jmh': JmhBenchmarkRunner,
       'ju2jmh': Ju2JmhBenchmarkRunner,
       'ju4runner': Ju4RunnerBenchmarkRunner
     }

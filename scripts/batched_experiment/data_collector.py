@@ -68,6 +68,7 @@ class ExperimentDataCollector:
   def _create_collector(config):
     approaches = {
       'gradle-test': GradleTestDataCollector,
+      'jmh': JmhBenchmarkDataCollector,
       'ju2jmh': JmhBenchmarkDataCollector,
       'ju4runner': JmhBenchmarkDataCollector
     }
