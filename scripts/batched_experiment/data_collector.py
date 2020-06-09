@@ -6,17 +6,13 @@ import os
 from batched_experiment._util import clear_console_line
 from batched_experiment.config import Test
 from batched_experiment.error import BenchmarkExecutionFailedError
-
-
-class Result:
-  def __init__(self, throughput=None, errors=None):
-    self.throughput = throughput if throughput else []
-    self.errors = errors if errors else []
+from batched_experiment.experiment_data import ExperimentResult, ExperimentResults, Result
 
 
 class RunnerDataCollector:
   def __init__(self, config):
     self.config = config
+
 
 class GradleTestDataCollector(RunnerDataCollector):
   def collect_repetition_data(self, tests, repetition_output_dir):
@@ -98,41 +94,27 @@ class ExperimentDataCollector:
   def repetitions(self):
     return self.config.repetitions
 
-  def collect_repetition_data(self, batch, repetition):
-    if not 0 <= batch < self.finished_batches:
-      raise IndexError('batch index out of range; expected 0..{:d}, but was {:d}'.format(self.finished_batches, batch))
-    if not 0 <= repetition < self.repetitions:
-      raise IndexError(
-        'repetition index out of range; expected 0..{:d}, but was {:d}'.format(self.repetitions, repetition)
-      )
+  def _collect_repetition_data(self, batch, repetition):
     tests = self.config.test_batches[batch]
     repetition_dir = self.config.repetition_dir(batch, repetition)
     collector_results = {
       collector.config: collector.collect_repetition_data(tests, repetition_dir)
       for collector in self.runner_data_collectors
     }
-    results = {}
+    results = []
     for config in collector_results:
       for test in collector_results[config]:
-        results[test, config] = collector_results[config][test]
+        results.append(ExperimentResult(batch, repetition, test, config, collector_results[config][test]))
     return results
 
-  @staticmethod
-  def _merge_results(results):
-    return Result(
-      throughput=list(itertools.chain.from_iterable(result.throughput for result in results)),
-      errors=list(itertools.chain.from_iterable(result.errors for result in results))
-    )
-
-  def collect_batch_data(self, batch, combine_repetitions=True):
-    repetition_results = [self.collect_repetition_data(batch, r) for r in range(self.repetitions)]
-    results = {}
-    for test in self.config.test_batches[batch]:
-      for collector in self.runner_data_collectors:
-        if combine_repetitions:
-          collector_results = [repetition_results[r][test, collector.config] for r in range(self.repetitions)]
-          results[test, collector.config] = ExperimentDataCollector._merge_results(collector_results)
-        else:
-          for repetition in range(self.repetitions):
-            results[test, collector.config, repetition] = repetition_results[repetition][test, collector.config]
-    return results
+  def collect_experiment_data(self, progress_callback=None):
+    results = []
+    for batch in range(self.finished_batches):
+      for repetition in range(self.repetitions):
+        if progress_callback:
+          progress_callback(
+            current_batch=batch, current_repetition=repetition, total_batches=self.finished_batches,
+            total_repetitions=self.repetitions
+          )
+        results.extend(self._collect_repetition_data(batch, repetition))
+    return ExperimentResults.from_results(self.config, results)

@@ -1,6 +1,11 @@
-import os
 import json
+import os
 
+
+from functools import total_ordering
+
+
+@total_ordering
 class Test:
   def __init__(self, class_name, method_name):
     self.class_name = class_name
@@ -14,7 +19,11 @@ class Test:
   def __hash__(self):
     return hash((self.class_name, self.method_name))
 
+  def __lt__(self, other):
+    return (self.class_name, self.method_name) < (other.class_name, other.method_name)
 
+
+@total_ordering
 class RunnerConfiguration:
   def __init__(self, name, approach):
     self.name = name
@@ -27,6 +36,9 @@ class RunnerConfiguration:
 
   def __hash__(self):
     return hash(self.name)
+
+  def __lt__(self, other):
+    return self.name < other.name
 
 
 class GradleTestRunnerConfiguration(RunnerConfiguration):

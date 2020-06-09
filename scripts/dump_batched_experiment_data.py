@@ -17,20 +17,19 @@ def main():
 
   data_collector = batched_experiment.data_collector.ExperimentDataCollector(config)
 
-  batches = []
-  
-  for batch in range(data_collector.finished_batches):
-    print('reading batch {:d}/{:d}'.format(batch + 1, data_collector.finished_batches))
-    batches.append(data_collector.collect_batch_data(batch, combine_repetitions=False))
+  # Temporary message to simplify the callback code.
+  print('reading batch 0/0, repetition 0/0')
+  def progress_callback(current_batch=0, current_repetition=0, total_batches=0, total_repetitions=0):
     clear_console_line()
+    print('reading batch {:d}/{:d}, repetition {:d}/{:d}'.format(
+      current_batch + 1, total_batches, current_repetition + 1, total_repetitions
+    ))
 
-  output = {
-    'config': config,
-    'batches': batches
-  }
+  experiment_results = data_collector.collect_experiment_data(progress_callback)
+  clear_console_line()
 
   with open(args.output_file, 'wb') as f:
-    pickle.dump(output, f)
+    pickle.dump(experiment_results, f)
 
 
 if __name__ == '__main__':
