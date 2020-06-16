@@ -6,20 +6,16 @@ import scipy.stats
 from batched_experiment.experiment_statistics import ThroughputStatistics
 
 
-def clear_console_line():
-  print('\033[F\033[K', end='')
-
-
 def main():
   parser = argparse.ArgumentParser()
-  parser.add_argument('data_file', type=str)
+  parser.add_argument('statistics_file', type=str)
   parser.add_argument('runner1', type=str)
   parser.add_argument('runner2', type=str)
   parser.add_argument('statistic', type=str)
   parser.add_argument('--hypothesis', type=str, default='two-sided')
   args = parser.parse_args()
 
-  with open(args.data_file, 'rb') as f:
+  with open(args.statistics_file, 'rb') as f:
     data = pickle.load(f)
 
   def find_runner(name):
@@ -36,20 +32,14 @@ def main():
   runner1_results = data.get_results(runner=runner1, combine_repetitions=True)
   runner2_results = data.get_results(runner=runner2, combine_repetitions=True)
 
-  def statistic_from_result(result):
-    return getattr(ThroughputStatistics(result.result), args.statistic)
   deltas = []
   skipped = 0
-  i = 0
-  for runner1_result, runner2_result in zip(runner1_results, runner2_results):
-    i += 1
-    print('{:d}/{:d}, {:d} skipped'.format(i, len(runner1_results), skipped))
-    if runner1_result.result.errors or runner2_result.result.errors:
+  for (result1, statistics1), (result2, statistics2) in zip(runner1_results, runner2_results):
+    if result1.result.errors or result2.result.errors:
       skipped += 1
     else:
-      deltas.append(statistic_from_result(runner1_result) - statistic_from_result(runner2_result))
-    clear_console_line()
-  print('deltas: {:d}, errors: {:d}, total: {:d}'.format(len(deltas), skipped, i))
+      deltas.append(getattr(statistics1, args.statistic) - getattr(statistics2, args.statistic))
+  print('deltas: {:d}, errors: {:d}, total: {:d}'.format(len(deltas), skipped, len(runner1_results)))
   print(scipy.stats.wilcoxon(deltas, alternative=args.hypothesis))
 
 if __name__ == '__main__':

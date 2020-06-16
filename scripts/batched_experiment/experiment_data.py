@@ -27,7 +27,7 @@ class ExperimentResult:
 class ExperimentResults:
   def __init__(self, config, data):
     self.config = config
-    self.data = data
+    self._data = data
 
   @staticmethod
   def from_results(config, experiment_results):
@@ -46,8 +46,8 @@ class ExperimentResults:
         return (filter,) if filter in d else ()
       else:
         return sorted(d.keys())
-    for b in filtered_keys(self.data, batch):
-      tests = self.data[b]
+    for b in filtered_keys(self._data, batch):
+      tests = self._data[b]
       for t in filtered_keys(tests, test):
         runners = tests[t]
         for rn in filtered_keys(runners, runner):
