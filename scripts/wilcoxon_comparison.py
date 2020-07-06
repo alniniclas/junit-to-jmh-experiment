@@ -1,6 +1,7 @@
 import argparse
 import pickle
 import scipy.stats
+import statistics
 
 
 from batched_experiment.experiment_statistics import ThroughputStatistics
@@ -39,8 +40,11 @@ def main():
       skipped += 1
     else:
       deltas.append(getattr(statistics1, args.statistic) - getattr(statistics2, args.statistic))
+  wilcoxon_result = scipy.stats.wilcoxon(deltas, alternative=args.hypothesis)
+  cohen_d = statistics.mean(deltas) / statistics.stdev(deltas)
   print('deltas: {:d}, errors: {:d}, total: {:d}'.format(len(deltas), skipped, len(runner1_results)))
-  print(scipy.stats.wilcoxon(deltas, alternative=args.hypothesis))
+  print('Wilcoxon test: statistic: {}, p-value: {}'.format(wilcoxon_result.statistic, wilcoxon_result.pvalue))
+  print("Cohen's d: {}".format(cohen_d))
 
 if __name__ == '__main__':
   main()
