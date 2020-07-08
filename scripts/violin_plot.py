@@ -1,5 +1,6 @@
 import argparse
 import pickle
+import collections
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -7,54 +8,44 @@ import numpy as np
 from batched_experiment.experiment_statistics import ThroughputStatistics
 
 
-def clear_console_line():
-  print('\033[F\033[K', end='')
+DataSeries = collections.namedtuple('DataSeries', ('name', 'datapoints'))
 
 
-def main():
-  parser = argparse.ArgumentParser()
-  parser.add_argument('statistics_file', type=str)
-  parser.add_argument('statistic', type=str)
-  args = parser.parse_args()
-
-  with open(args.statistics_file, 'rb') as f:
-    data = pickle.load(f)
-
-  runner_results = {
-    runner: data.get_results(runner=runner, combine_repetitions=True) for runner in data.config.runner_configs
-  }
-
-  def has_errors(i):
-    for runner in data.config.runner_configs:
-      result, statistics = runner_results[runner][i]
-      if result.result.errors:
-        return True
-    return False
-
-  plot_data = {runner: [] for runner in data.config.runner_configs}
-  for i in range(len(runner_results[data.config.runner_configs[0]])):
-    if has_errors(i):
-      continue
-    for runner in data.config.runner_configs:
-      result, statistics = runner_results[runner][i]
-      plot_data[runner].append(getattr(statistics, args.statistic))
-
+def violin_plot(dataset, title=None, xlabel=None, ylabel=None, plot_outliers=True, outlier_jitter=0.0):
   fig, ax = plt.subplots()
-  ax.set_ylabel(args.statistic)
-  tick_positions = np.arange(1, len(data.config.runner_configs) + 1)
+  if title:
+    ax.set_title(title)
+  if xlabel:
+    ax.set_xlabel(xlabel)
+  if ylabel:
+    ax.set_ylabel(ylabel)
+  tick_positions = np.arange(1, len(dataset) + 1)
   ax.set_xticks(tick_positions)
-  ax.set_xticklabels(runner.name for runner in data.config.runner_configs)
-  datapoints = [plot_data[runner] for runner in data.config.runner_configs]
+  ax.set_xticklabels(series.name for series in dataset)
+  datapoints = np.array([series.datapoints for series in dataset])
   mins, q1, medians, q3, maxes = np.percentile(datapoints, [0, 25, 50, 75, 100], axis=1)
   ax.scatter(tick_positions, medians, marker='o', color='white', s=30, zorder=3)
   ax.vlines(tick_positions, q1, q3, color='k', lw=5)
-  ax.vlines(tick_positions, mins, maxes, color='k', lw=1)
-  plot = ax.violinplot(datapoints, showextrema=False)
+  iqr = q3 - q1
+  whiskers_min = q1 - 1.5 * iqr
+  whiskers_max = q3 + 1.5 * iqr
+  ax.vlines(
+    tick_positions,
+    [datapoints[i][datapoints[i] >= whiskers_min[i]].min() for i in range(len(datapoints))],
+    [datapoints[i][datapoints[i] <= whiskers_max[i]].max() for i in range(len(datapoints))],
+    color='k',
+    lw=1
+  )
+  if plot_outliers:
+    outlier_ticks = []
+    outlier_values = []
+    for i in range(len(datapoints)):
+      outliers = datapoints[i][(datapoints[i] < whiskers_min[i]) | (datapoints[i] > whiskers_max[i])]
+      outlier_ticks.extend((1 * np.random.rand(len(outliers)) - 0.5) * outlier_jitter + tick_positions[i])
+      outlier_values.extend(outliers)
+    ax.scatter(outlier_ticks, outlier_values, marker='o', c='white', edgecolors='k', s=15, zorder=3)
+  plot = ax.violinplot(datapoints.transpose(), showextrema=False)
   for pc in plot['bodies']:
     pc.set_edgecolor('black')
     pc.set_alpha(1)
   plt.show()
-
-if __name__ == '__main__':
-  main()
-
