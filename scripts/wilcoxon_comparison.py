@@ -1,10 +1,10 @@
 import argparse
 import pickle
 import scipy.stats
-import statistics
 
 
 from batched_experiment.experiment_statistics import ThroughputStatistics
+from summary_statistics import summary_statistics
 
 
 def main():
@@ -30,19 +30,32 @@ def main():
   runner1 = find_runner(args.runner1)
   runner2 = find_runner(args.runner2)
 
-  runner1_results = data.get_results(runner=runner1, combine_repetitions=True)
-  runner2_results = data.get_results(runner=runner2, combine_repetitions=True)
+  results = zip(
+    data.get_results(runner=runner1, combine_repetitions=True),
+    data.get_results(runner=runner2, combine_repetitions=True)
+  )
 
-  deltas = []
+  runner1_statistic_vals = []
+  runner2_statistic_vals = []
   skipped = 0
-  for (result1, statistics1), (result2, statistics2) in zip(runner1_results, runner2_results):
+  for (result1, statistics1), (result2, statistics2) in results:
     if result1.result.errors or result2.result.errors:
       skipped += 1
     else:
-      deltas.append(getattr(statistics1, args.statistic) - getattr(statistics2, args.statistic))
+      runner1_statistic_vals.append(getattr(statistics1, args.statistic))
+      runner2_statistic_vals.append(getattr(statistics2, args.statistic))
+  deltas = [val1 - val2 for val1, val2 in zip(runner1_statistic_vals, runner2_statistic_vals)]
+
+  runner1_summary = summary_statistics(runner1_statistic_vals)
+  runner2_summary = summary_statistics(runner2_statistic_vals)
+  deltas_summary = summary_statistics(deltas)
   wilcoxon_result = scipy.stats.wilcoxon(deltas, alternative=args.hypothesis)
-  cohen_d = statistics.mean(deltas) / statistics.stdev(deltas)
-  print('deltas: {:d}, errors: {:d}, total: {:d}'.format(len(deltas), skipped, len(runner1_results)))
+  cohen_d = deltas_summary.mean / deltas_summary.stddev
+
+  print('deltas: {:d}, errors: {:d}, total: {:d}'.format(len(deltas), skipped, len(deltas) + skipped))
+  print('{} {}: {}'.format(runner1.name, args.statistic, runner1_summary))
+  print('{} {}: {}'.format(runner2.name, args.statistic, runner2_summary))
+  print('{} delta: {}'.format(args.statistic, deltas_summary))
   print('Wilcoxon test: statistic: {}, p-value: {}'.format(wilcoxon_result.statistic, wilcoxon_result.pvalue))
   print("Cohen's d: {}".format(cohen_d))
 
