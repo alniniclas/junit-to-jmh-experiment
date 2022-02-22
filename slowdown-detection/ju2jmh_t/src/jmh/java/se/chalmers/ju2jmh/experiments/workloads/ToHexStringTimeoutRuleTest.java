@@ -12,21 +12,23 @@ public class ToHexStringTimeoutRuleTest extends ToHexStringTest {
     @org.openjdk.jmh.annotations.State(org.openjdk.jmh.annotations.Scope.Thread)
     public static class _Benchmark {
 
+        private _Payloads payloads;
+
         private ToHexStringTimeoutRuleTest instance;
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadOnce(_Payloads payloads) throws java.lang.Throwable {
-            payloads.testRunWorkloadOnce.evaluate();
+        public void benchmark_testRunWorkloadOnce() throws java.lang.Throwable {
+            this.payloads.testRunWorkloadOnce.evaluate();
         }
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadTwice(_Payloads payloads) throws java.lang.Throwable {
-            payloads.testRunWorkloadTwice.evaluate();
+        public void benchmark_testRunWorkloadTwice() throws java.lang.Throwable {
+            this.payloads.testRunWorkloadTwice.evaluate();
         }
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadThrice(_Payloads payloads) throws java.lang.Throwable {
-            payloads.testRunWorkloadThrice.evaluate();
+        public void benchmark_testRunWorkloadThrice() throws java.lang.Throwable {
+            this.payloads.testRunWorkloadThrice.evaluate();
         }
 
         private static class _InstanceStatement extends org.junit.runners.model.Statement {
@@ -87,8 +89,7 @@ public class ToHexStringTimeoutRuleTest extends ToHexStringTest {
             }
         }
 
-        @org.openjdk.jmh.annotations.State(org.openjdk.jmh.annotations.Scope.Benchmark)
-        public static class _Payloads {
+        private static class _Payloads {
 
             public org.junit.runners.model.Statement testRunWorkloadOnce;
 
@@ -98,10 +99,11 @@ public class ToHexStringTimeoutRuleTest extends ToHexStringTest {
         }
 
         @org.openjdk.jmh.annotations.Setup(org.openjdk.jmh.annotations.Level.Trial)
-        public void makePayloads(_Payloads payloads) {
-            payloads.testRunWorkloadOnce = _ClassStatement.forPayload(ToHexStringTimeoutRuleTest::testRunWorkloadOnce, "testRunWorkloadOnce", this);
-            payloads.testRunWorkloadTwice = _ClassStatement.forPayload(ToHexStringTimeoutRuleTest::testRunWorkloadTwice, "testRunWorkloadTwice", this);
-            payloads.testRunWorkloadThrice = _ClassStatement.forPayload(ToHexStringTimeoutRuleTest::testRunWorkloadThrice, "testRunWorkloadThrice", this);
+        public void makePayloads() {
+            this.payloads = new _Payloads();
+            this.payloads.testRunWorkloadOnce = _ClassStatement.forPayload(ToHexStringTimeoutRuleTest::testRunWorkloadOnce, "testRunWorkloadOnce", this);
+            this.payloads.testRunWorkloadTwice = _ClassStatement.forPayload(ToHexStringTimeoutRuleTest::testRunWorkloadTwice, "testRunWorkloadTwice", this);
+            this.payloads.testRunWorkloadThrice = _ClassStatement.forPayload(ToHexStringTimeoutRuleTest::testRunWorkloadThrice, "testRunWorkloadThrice", this);
         }
     }
 }

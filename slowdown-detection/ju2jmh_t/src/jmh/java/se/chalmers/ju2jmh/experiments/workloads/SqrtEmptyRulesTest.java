@@ -4,7 +4,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 
-public class ToHexStringEmptyRulesTest extends ToHexStringTest {
+public class SqrtEmptyRulesTest extends SqrtTest {
 
     @ClassRule
     public static final TestRule emptyClassRuleField = EmptyTestRule.INSTANCE;
@@ -25,30 +25,32 @@ public class ToHexStringEmptyRulesTest extends ToHexStringTest {
     @org.openjdk.jmh.annotations.State(org.openjdk.jmh.annotations.Scope.Thread)
     public static class _Benchmark {
 
-        private ToHexStringEmptyRulesTest instance;
+        private _Payloads payloads;
+
+        private SqrtEmptyRulesTest instance;
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadOnce(_Payloads payloads) throws java.lang.Throwable {
-            payloads.testRunWorkloadOnce.evaluate();
+        public void benchmark_testRunWorkloadOnce() throws java.lang.Throwable {
+            this.payloads.testRunWorkloadOnce.evaluate();
         }
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadTwice(_Payloads payloads) throws java.lang.Throwable {
-            payloads.testRunWorkloadTwice.evaluate();
+        public void benchmark_testRunWorkloadTwice() throws java.lang.Throwable {
+            this.payloads.testRunWorkloadTwice.evaluate();
         }
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadThrice(_Payloads payloads) throws java.lang.Throwable {
-            payloads.testRunWorkloadThrice.evaluate();
+        public void benchmark_testRunWorkloadThrice() throws java.lang.Throwable {
+            this.payloads.testRunWorkloadThrice.evaluate();
         }
 
         private static class _InstanceStatement extends org.junit.runners.model.Statement {
 
-            private final se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringEmptyRulesTest> payload;
+            private final se.chalmers.ju2jmh.api.ThrowingConsumer<SqrtEmptyRulesTest> payload;
 
             private final _Benchmark benchmark;
 
-            public _InstanceStatement(se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringEmptyRulesTest> payload, _Benchmark benchmark) {
+            public _InstanceStatement(se.chalmers.ju2jmh.api.ThrowingConsumer<SqrtEmptyRulesTest> payload, _Benchmark benchmark) {
                 this.payload = payload;
                 this.benchmark = benchmark;
             }
@@ -61,7 +63,7 @@ public class ToHexStringEmptyRulesTest extends ToHexStringTest {
 
         private static class _ClassStatement extends org.junit.runners.model.Statement {
 
-            private final se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringEmptyRulesTest> payload;
+            private final se.chalmers.ju2jmh.api.ThrowingConsumer<SqrtEmptyRulesTest> payload;
 
             private final _Benchmark benchmark;
 
@@ -69,7 +71,7 @@ public class ToHexStringEmptyRulesTest extends ToHexStringTest {
 
             private final org.junit.runners.model.FrameworkMethod frameworkMethod;
 
-            private _ClassStatement(se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringEmptyRulesTest> payload, _Benchmark benchmark, org.junit.runner.Description description, org.junit.runners.model.FrameworkMethod frameworkMethod) {
+            private _ClassStatement(se.chalmers.ju2jmh.api.ThrowingConsumer<SqrtEmptyRulesTest> payload, _Benchmark benchmark, org.junit.runner.Description description, org.junit.runners.model.FrameworkMethod frameworkMethod) {
                 this.payload = payload;
                 this.benchmark = benchmark;
                 this.description = description;
@@ -78,7 +80,7 @@ public class ToHexStringEmptyRulesTest extends ToHexStringTest {
 
             @java.lang.Override
             public void evaluate() throws java.lang.Throwable {
-                this.benchmark.instance = new ToHexStringEmptyRulesTest();
+                this.benchmark.instance = new SqrtEmptyRulesTest();
                 org.junit.runners.model.Statement statement = new _InstanceStatement(this.payload, this.benchmark);
                 statement = this.applyRule(this.benchmark.instance.emptyRuleField, statement);
                 statement = this.applyRule(this.benchmark.instance.emptyRuleMethod(), statement);
@@ -93,18 +95,17 @@ public class ToHexStringEmptyRulesTest extends ToHexStringTest {
                 return se.chalmers.ju2jmh.api.Rules.apply(rule, statement, this.frameworkMethod, this.benchmark.instance);
             }
 
-            public static org.junit.runners.model.Statement forPayload(se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringEmptyRulesTest> payload, String name, _Benchmark benchmark) {
-                org.junit.runner.Description description = se.chalmers.ju2jmh.api.Rules.description(ToHexStringEmptyRulesTest.class, name);
-                org.junit.runners.model.FrameworkMethod frameworkMethod = se.chalmers.ju2jmh.api.Rules.frameworkMethod(ToHexStringEmptyRulesTest.class, name);
+            public static org.junit.runners.model.Statement forPayload(se.chalmers.ju2jmh.api.ThrowingConsumer<SqrtEmptyRulesTest> payload, String name, _Benchmark benchmark) {
+                org.junit.runner.Description description = se.chalmers.ju2jmh.api.Rules.description(SqrtEmptyRulesTest.class, name);
+                org.junit.runners.model.FrameworkMethod frameworkMethod = se.chalmers.ju2jmh.api.Rules.frameworkMethod(SqrtEmptyRulesTest.class, name);
                 org.junit.runners.model.Statement statement = new _ClassStatement(payload, benchmark, description, frameworkMethod);
-                statement = se.chalmers.ju2jmh.api.Rules.apply(ToHexStringEmptyRulesTest.emptyClassRuleField, statement, description);
-                statement = se.chalmers.ju2jmh.api.Rules.apply(ToHexStringEmptyRulesTest.emptyClassRuleMethod(), statement, description);
+                statement = se.chalmers.ju2jmh.api.Rules.apply(SqrtEmptyRulesTest.emptyClassRuleField, statement, description);
+                statement = se.chalmers.ju2jmh.api.Rules.apply(SqrtEmptyRulesTest.emptyClassRuleMethod(), statement, description);
                 return statement;
             }
         }
 
-        @org.openjdk.jmh.annotations.State(org.openjdk.jmh.annotations.Scope.Benchmark)
-        public static class _Payloads {
+        private static class _Payloads {
 
             public org.junit.runners.model.Statement testRunWorkloadOnce;
 
@@ -114,10 +115,11 @@ public class ToHexStringEmptyRulesTest extends ToHexStringTest {
         }
 
         @org.openjdk.jmh.annotations.Setup(org.openjdk.jmh.annotations.Level.Trial)
-        public void makePayloads(_Payloads payloads) {
-            payloads.testRunWorkloadOnce = _ClassStatement.forPayload(ToHexStringEmptyRulesTest::testRunWorkloadOnce, "testRunWorkloadOnce", this);
-            payloads.testRunWorkloadTwice = _ClassStatement.forPayload(ToHexStringEmptyRulesTest::testRunWorkloadTwice, "testRunWorkloadTwice", this);
-            payloads.testRunWorkloadThrice = _ClassStatement.forPayload(ToHexStringEmptyRulesTest::testRunWorkloadThrice, "testRunWorkloadThrice", this);
+        public void makePayloads() {
+            this.payloads = new _Payloads();
+            this.payloads.testRunWorkloadOnce = _ClassStatement.forPayload(SqrtEmptyRulesTest::testRunWorkloadOnce, "testRunWorkloadOnce", this);
+            this.payloads.testRunWorkloadTwice = _ClassStatement.forPayload(SqrtEmptyRulesTest::testRunWorkloadTwice, "testRunWorkloadTwice", this);
+            this.payloads.testRunWorkloadThrice = _ClassStatement.forPayload(SqrtEmptyRulesTest::testRunWorkloadThrice, "testRunWorkloadThrice", this);
         }
     }
 }

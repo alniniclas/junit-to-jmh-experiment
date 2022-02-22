@@ -36,21 +36,23 @@ public class ToHexStringTest {
     @org.openjdk.jmh.annotations.State(org.openjdk.jmh.annotations.Scope.Thread)
     public static class _Benchmark {
 
+        private _Payloads payloads;
+
         private ToHexStringTest instance;
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadOnce(_Payloads payloads) throws java.lang.Throwable {
-            this.runBenchmark(payloads.testRunWorkloadOnce);
+        public void benchmark_testRunWorkloadOnce() throws java.lang.Throwable {
+            this.runBenchmark(this.payloads.testRunWorkloadOnce);
         }
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadTwice(_Payloads payloads) throws java.lang.Throwable {
-            this.runBenchmark(payloads.testRunWorkloadTwice);
+        public void benchmark_testRunWorkloadTwice() throws java.lang.Throwable {
+            this.runBenchmark(this.payloads.testRunWorkloadTwice);
         }
 
         @org.openjdk.jmh.annotations.Benchmark
-        public void benchmark_testRunWorkloadThrice(_Payloads payloads) throws java.lang.Throwable {
-            this.runBenchmark(payloads.testRunWorkloadThrice);
+        public void benchmark_testRunWorkloadThrice() throws java.lang.Throwable {
+            this.runBenchmark(this.payloads.testRunWorkloadThrice);
         }
 
         private void runBenchmark(se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringTest> payload) throws java.lang.Throwable {
@@ -58,8 +60,7 @@ public class ToHexStringTest {
             payload.accept(this.instance);
         }
 
-        @org.openjdk.jmh.annotations.State(org.openjdk.jmh.annotations.Scope.Benchmark)
-        public static class _Payloads {
+        private static class _Payloads {
 
             public se.chalmers.ju2jmh.api.ThrowingConsumer<ToHexStringTest> testRunWorkloadOnce;
 
@@ -69,10 +70,11 @@ public class ToHexStringTest {
         }
 
         @org.openjdk.jmh.annotations.Setup(org.openjdk.jmh.annotations.Level.Trial)
-        public void makePayloads(_Payloads payloads) {
-            payloads.testRunWorkloadOnce = ToHexStringTest::testRunWorkloadOnce;
-            payloads.testRunWorkloadTwice = ToHexStringTest::testRunWorkloadTwice;
-            payloads.testRunWorkloadThrice = ToHexStringTest::testRunWorkloadThrice;
+        public void makePayloads() {
+            this.payloads = new _Payloads();
+            this.payloads.testRunWorkloadOnce = ToHexStringTest::testRunWorkloadOnce;
+            this.payloads.testRunWorkloadTwice = ToHexStringTest::testRunWorkloadTwice;
+            this.payloads.testRunWorkloadThrice = ToHexStringTest::testRunWorkloadThrice;
         }
     }
 }
