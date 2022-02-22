@@ -11,9 +11,9 @@ def main():
   parser.add_argument('--ju4-runner', dest='ju4_runner',
                       action='store_true')
   parser.set_defaults(ju4_runner=False)
-  parser.add_argument('--composite', dest='composite',
+  parser.add_argument('--tailored', dest='tailored',
                       action='store_true')
-  parser.set_defaults(composite=False)
+  parser.set_defaults(tailored=False)
   args = parser.parse_args()
 
   ju2jmh_dir = os.path.abspath(args.ju2jmh_dir)
@@ -34,8 +34,8 @@ def main():
   )
   if args.ju4_runner:
     converter_args = '{} --ju4-runner-benchmark'.format(converter_args)
-  if args.composite:
-    converter_args = '{} --composite-benchmark'.format(converter_args)
+  if args.tailored:
+    converter_args = '{} --tailored-benchmark'.format(converter_args)
   with subprocess.Popen([gradlew, ':converter:run', '--args={}'.format(converter_args)], cwd=ju2jmh_dir) as converter:
     converter.wait()
 
