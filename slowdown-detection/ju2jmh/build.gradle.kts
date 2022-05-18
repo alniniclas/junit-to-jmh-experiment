@@ -11,3 +11,7 @@ dependencies {
     jmh("junit", "junit", jUnit4Version)
     jmh("com.github.javaparser", "javaparser-core", javaparserVersion)
 }
+
+tasks.named<org.gradle.jvm.tasks.Jar>("jmhJar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

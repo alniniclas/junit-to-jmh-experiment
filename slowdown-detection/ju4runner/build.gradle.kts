@@ -10,3 +10,7 @@ dependencies {
     jmh(project(":main", "testArchive"))
     jmh("junit", "junit", jUnit4Version)
 }
+
+tasks.named<org.gradle.jvm.tasks.Jar>("jmhJar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
