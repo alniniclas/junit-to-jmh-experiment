@@ -95,12 +95,31 @@ public class ParseJavaSourceEmptyRulesTest extends ParseJavaSourceTest {
                 return se.chalmers.ju2jmh.api.Rules.apply(rule, statement, this.frameworkMethod, this.benchmark.instance);
             }
 
+            private static class _ApplyClassRulesStatement extends org.junit.runners.model.Statement {
+
+                private final org.junit.runners.model.Statement statement;
+
+                private final org.junit.runner.Description description;
+
+                public _ApplyClassRulesStatement(org.junit.runners.model.Statement statement, org.junit.runner.Description description) {
+                    this.statement = statement;
+                    this.description = description;
+                }
+
+                @java.lang.Override
+                public void evaluate() throws java.lang.Throwable {
+                    org.junit.runners.model.Statement statement = this.statement;
+                    statement = se.chalmers.ju2jmh.api.Rules.apply(ParseJavaSourceEmptyRulesTest.emptyClassRuleField, statement, this.description);
+                    statement = se.chalmers.ju2jmh.api.Rules.apply(ParseJavaSourceEmptyRulesTest.emptyClassRuleMethod(), statement, this.description);
+                    statement.evaluate();
+                }
+            }
+
             public static org.junit.runners.model.Statement forPayload(se.chalmers.ju2jmh.api.ThrowingConsumer<ParseJavaSourceEmptyRulesTest> payload, String name, _Benchmark benchmark) {
                 org.junit.runner.Description description = se.chalmers.ju2jmh.api.Rules.description(ParseJavaSourceEmptyRulesTest.class, name);
                 org.junit.runners.model.FrameworkMethod frameworkMethod = se.chalmers.ju2jmh.api.Rules.frameworkMethod(ParseJavaSourceEmptyRulesTest.class, name);
                 org.junit.runners.model.Statement statement = new _ClassStatement(payload, benchmark, description, frameworkMethod);
-                statement = se.chalmers.ju2jmh.api.Rules.apply(ParseJavaSourceEmptyRulesTest.emptyClassRuleField, statement, description);
-                statement = se.chalmers.ju2jmh.api.Rules.apply(ParseJavaSourceEmptyRulesTest.emptyClassRuleMethod(), statement, description);
+                statement = new _ApplyClassRulesStatement(statement, description);
                 return statement;
             }
         }
