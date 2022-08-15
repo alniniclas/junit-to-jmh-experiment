@@ -1,0 +1,12 @@
+se.chalmers.ju2jmh.experiments.workloads.ParseJavaSourceTest
+se.chalmers.ju2jmh.experiments.workloads.ParseJavaSourceEmptyFixturesTest
+se.chalmers.ju2jmh.experiments.workloads.ParseJavaSourceEmptyRulesTest
+se.chalmers.ju2jmh.experiments.workloads.ParseJavaSourceTimeoutRuleTest
+se.chalmers.ju2jmh.experiments.workloads.ToHexStringTest
+se.chalmers.ju2jmh.experiments.workloads.ToHexStringEmptyFixturesTest
+se.chalmers.ju2jmh.experiments.workloads.ToHexStringEmptyRulesTest
+se.chalmers.ju2jmh.experiments.workloads.ToHexStringTimeoutRuleTest
+se.chalmers.ju2jmh.experiments.workloads.SqrtTest
+se.chalmers.ju2jmh.experiments.workloads.SqrtEmptyFixturesTest
+se.chalmers.ju2jmh.experiments.workloads.SqrtEmptyRulesTest
+se.chalmers.ju2jmh.experiments.workloads.SqrtTimeoutRuleTest
