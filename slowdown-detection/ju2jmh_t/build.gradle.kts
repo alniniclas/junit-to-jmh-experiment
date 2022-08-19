@@ -1,6 +1,6 @@
 plugins {
     java
-    id("me.champeau.gradle.jmh") version "0.5.0"
+    id("me.champeau.jmh") version "0.6.6"
 }
 
 dependencies {
@@ -10,8 +10,4 @@ dependencies {
     jmh(project(":main"))
     jmh("junit", "junit", jUnit4Version)
     jmh("com.github.javaparser", "javaparser-core", javaparserVersion)
-}
-
-tasks.named<org.gradle.jvm.tasks.Jar>("jmhJar") {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

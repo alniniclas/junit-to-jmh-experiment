@@ -1,6 +1,6 @@
 plugins {
     java
-    id("me.champeau.gradle.jmh") version "0.5.3"
+    id("me.champeau.jmh") version "0.6.6"
 }
 
 dependencies {
@@ -30,8 +30,4 @@ tasks.register<Jar>(name = "jarTest") {
 
 artifacts {
     add("testArchive", tasks.getByName("jarTest"))
-}
-
-tasks.named<org.gradle.jvm.tasks.Jar>("jmhJar") {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
